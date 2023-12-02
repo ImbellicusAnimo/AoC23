@@ -35,7 +35,12 @@ func readTextInput(fileName string) []string {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(file)
 
 	// read file line by line
 	var lines []string
@@ -48,7 +53,7 @@ func readTextInput(fileName string) []string {
 }
 
 func buildNumberFromCoords(x, y int) int {
-	combString := string(x) + string(y)
+	combString := string(rune(x)) + string(rune(y))
 	numberFromString, _ := strconv.Atoi(combString)
 	return numberFromString
 }
