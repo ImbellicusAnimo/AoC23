@@ -6,6 +6,9 @@ import (
 )
 
 func main() {
-	sum := day1.Run()
+	sum := day1.Run(1)
+	log.Println("Sum:", sum)
+
+	sum = day1.Run(2)
 	log.Println("Sum:", sum)
 }
