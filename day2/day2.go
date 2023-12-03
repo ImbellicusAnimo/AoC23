@@ -41,17 +41,53 @@ func Run(part int) int {
 	return sum
 }
 
-// Determine which games would have been possible if the bag had been loaded with only 12 red cubes, 13 green cubes, and 14 blue cubes. What is the sum of the IDs of those games?
+// Determine which games would have been possible if the bag had been loaded with only 12 red cubes, 13 green cubes,
+// and 14 blue cubes. What is the sum of the IDs of those games?
 func part1(lines *[]string) int {
 	log.Println("Running -> Day 2 / Part 1")
-	numGames := loadGames(lines)
+	loadGames(lines)
+	var sum int
+	for _, game := range games {
+		if checkGame(game) {
+			log.Println("Game", game.Id, "is possible")
+			sum += game.Id
+		}
+	}
+	return sum
+}
 
-	return numGames
+func checkGame(game Game) bool {
+	// check if game is possible
+
+	for _, set := range game.Sets {
+
+		// check red
+		if set.Red > 0 {
+			if set.Red > 12 {
+				return false
+			}
+		}
+
+		// check green
+		if set.Green > 0 {
+			if set.Green > 13 {
+				return false
+			}
+		}
+
+		// check blue
+		if set.Blue > 0 {
+			if set.Blue > 14 {
+				return false
+			}
+		}
+
+	}
+	return true
 }
 
 /*
-*
-* loadGames parses the input lines and loads the games into the games slice
+ * loadGames parses the input lines and loads the games into the games slice
  */
 func loadGames(lines *[]string) int {
 	var numGames int
@@ -68,16 +104,16 @@ func loadGames(lines *[]string) int {
 			colors := strings.Split(set, ",")
 			for _, color := range colors {
 				color = strings.TrimSpace(color)
-				if strings.HasPrefix(color, "green") {
-					color = strings.TrimPrefix(color, "green")
+				if strings.HasSuffix(color, "green") {
+					color = strings.TrimSuffix(color, "green")
 					color = strings.TrimSpace(color)
 					gameSet.Green, _ = strconv.Atoi(color)
-				} else if strings.HasPrefix(color, "blue") {
-					color = strings.TrimPrefix(color, "blue")
+				} else if strings.HasSuffix(color, "blue") {
+					color = strings.TrimSuffix(color, "blue")
 					color = strings.TrimSpace(color)
 					gameSet.Blue, _ = strconv.Atoi(color)
-				} else if strings.HasPrefix(color, "red") {
-					color = strings.TrimPrefix(color, "red")
+				} else if strings.HasSuffix(color, "red") {
+					color = strings.TrimSuffix(color, "red")
 					color = strings.TrimSpace(color)
 					gameSet.Red, _ = strconv.Atoi(color)
 				}
@@ -94,6 +130,9 @@ func part2(lines *[]string) int {
 	return 0
 }
 
+/**
+ * readTextInput reads the input file and returns a slice of strings
+ */
 func readTextInput(fileName string) []string {
 	// read file day1_input.txt
 	file, err := os.Open(fileName)
