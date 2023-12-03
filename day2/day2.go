@@ -29,12 +29,13 @@ var games []Game
 func Run(part int) int {
 	// read input
 	lines := readTextInput("day2/day2_input.txt")
+	loadGames(&lines)
 	var sum int
 
 	if part == 1 {
-		sum = part1(&lines)
+		sum = part1()
 	} else if part == 2 {
-		sum = part2(&lines)
+		sum = part2()
 	} else {
 		log.Fatal("Invalid part number")
 	}
@@ -43,19 +44,22 @@ func Run(part int) int {
 
 // Determine which games would have been possible if the bag had been loaded with only 12 red cubes, 13 green cubes,
 // and 14 blue cubes. What is the sum of the IDs of those games?
-func part1(lines *[]string) int {
+func part1() int {
 	log.Println("Running -> Day 2 / Part 1")
-	loadGames(lines)
+
 	var sum int
 	for _, game := range games {
 		if checkGame(game) {
-			log.Println("Game", game.Id, "is possible")
+			//log.Println("Game", game.Id, "is possible")
 			sum += game.Id
 		}
 	}
 	return sum
 }
 
+/**
+ * checkGame checks if the game is possible
+ */
 func checkGame(game Game) bool {
 	// check if game is possible
 
@@ -81,7 +85,6 @@ func checkGame(game Game) bool {
 				return false
 			}
 		}
-
 	}
 	return true
 }
@@ -90,6 +93,7 @@ func checkGame(game Game) bool {
  * loadGames parses the input lines and loads the games into the games slice
  */
 func loadGames(lines *[]string) int {
+	games = make([]Game, 0)
 	var numGames int
 	for _, line := range *lines {
 		// Game 30: 4 green, 5 blue, 1 red; 19 red, 18 blue, 3 green; 18 red, 18 blue, 1 green; 5 green, 14 blue, 4 red; 4 red, 3 green, 18 blue; 6 blue, 3 green, 17 red
@@ -126,8 +130,35 @@ func loadGames(lines *[]string) int {
 	return numGames
 }
 
-func part2(lines *[]string) int {
-	return 0
+func part2() int {
+	log.Println("Running -> Day 2 / Part 1")
+
+	var sum int
+	for _, game := range games {
+		sum += calcGamePower(game)
+	}
+	return sum
+}
+
+/**
+ * calcGamePower calculates the power of the game
+ */
+func calcGamePower(game Game) int {
+	var minBlue, minRed, minGreen, power int
+	for _, set := range game.Sets {
+		if set.Blue > minBlue {
+			minBlue = set.Blue
+		}
+		if set.Red > minRed {
+			minRed = set.Red
+		}
+		if set.Green > minGreen {
+			minGreen = set.Green
+		}
+	}
+	power = minBlue * minRed * minGreen
+	//log.Println("Game", game.Id, "power:", power)
+	return power
 }
 
 /**

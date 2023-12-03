@@ -17,4 +17,7 @@ func main() {
 	log.Println("-------> Day 2 <-------")
 	sum = day2.Run(1)
 	log.Println("Sum:", sum)
+
+	sum = day2.Run(2)
+	log.Println("Sum:", sum)
 }
